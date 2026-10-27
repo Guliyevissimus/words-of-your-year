@@ -44,7 +44,7 @@ button, select, input { font: inherit; color: inherit; }
 
 /* top bar */
 .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 18px 0; position: relative; z-index: 2; }
-.brand { font-family: var(--ui); font-weight: 600; font-size: 11.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.brand { white-space: nowrap; font-family: var(--ui); font-weight: 600; font-size: 11.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
 .langsel { position: relative; }
 .langsel select { appearance: none; -webkit-appearance: none; font-family: var(--ui); font-weight: 500; font-size: 13px; padding: 7px 30px 7px 14px; border: 1px solid var(--rule); border-radius: 999px; background: var(--paper); cursor: pointer; }
 .langsel::after { content: ""; position: absolute; right: 13px; top: 50%; width: 6px; height: 6px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); transform: translateY(-70%) rotate(45deg); pointer-events: none; }
@@ -140,12 +140,67 @@ footer p { margin: 0; }
   @keyframes fadeUp { from { opacity: .3; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 }
 body:not(.opened) footer { display: none; }
+body.gaming .hero, body.gaming #results, body.gaming footer { display: none; }
+#game[hidden] { display: none; }
+.toplinks { display: flex; align-items: center; gap: 8px; }
+@media (max-width: 420px) { .brand { font-size: 10px; letter-spacing: .14em; } .gamelink, .langsel select { font-size: 12px; } .gamelink { padding: 7px 11px; } }
+.gamelink { white-space: nowrap; font-family: var(--ui); font-weight: 600; font-size: 13px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); cursor: pointer; text-decoration: none; }
+.gamelink:hover { background: #2a2a2a; }
+.playline { margin: 4px 0 0; font-size: 15px; }
+.playline a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--mark); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+/* life sections */
+.life { margin-top: 80px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 40px 56px; }
+.life h2 { font-family: var(--display); font-weight: 400; font-style: italic; font-size: 30px; margin: 0; }
+.life .sub { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+.life ul { list-style: none; margin: 16px 0 0; padding: 0; }
+.life li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: center; gap: 4px 18px; padding: 12px 0; border-top: 1px solid var(--rule); }
+.life .w { font-family: var(--display); font-size: 24px; line-height: 1.2; overflow-wrap: anywhere; }
+.life .m { display: block; font-family: var(--ui); font-size: 12px; color: var(--muted); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.life svg.spark { height: 34px; margin: 0; }
+/* game */
+.game { padding-block: 40px 80px; display: grid; gap: 22px; max-width: 760px; margin: 0 auto; }
+.game .back { justify-self: start; font-family: var(--ui); font-size: 13px; font-weight: 600; background: none; border: 0; padding: 0; cursor: pointer; color: var(--muted); }
+.game .back:hover { color: var(--ink); }
+.game h1 { font-family: var(--display); font-weight: 400; font-size: clamp(44px, 9vw, 84px); line-height: 1; margin: 0; letter-spacing: -.02em; }
+.game h1 em { font-style: italic; }
+.game .rules { margin: 0; color: var(--muted); max-width: 52ch; }
+.clues { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 12px; }
+.clue { border: 1px solid var(--rule); border-radius: 6px; padding: 16px 18px; min-height: 76px; display: grid; align-content: center; }
+.clue .w { font-family: var(--display); font-size: 28px; line-height: 1.15; overflow-wrap: anywhere; }
+.clue.locked { background: var(--sheet); border-style: dashed; color: var(--muted); font-family: var(--ui); font-size: 13px; }
+.clue.new { animation: pop .5s cubic-bezier(.2,.7,.2,1); }
+@keyframes pop { from { background: var(--mark); } to { background: var(--paper); } }
+.guessform { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+.guessform input { width: 4.2ch; font-family: var(--display); font-size: clamp(48px, 12vw, 72px); line-height: 1; text-align: center; padding: 0 0 4px; border: 0; border-bottom: 2.5px solid var(--ink); background: transparent; border-radius: 0; font-variant-numeric: lining-nums tabular-nums; }
+.guessform input:focus-visible { outline: none; border-bottom-color: #b8900a; }
+.gmsg { margin: 0; min-height: 1.5em; font-family: var(--ui); font-size: 14px; color: var(--muted); }
+.guesses { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.guesses li { display: flex; align-items: center; gap: 14px; padding: 10px 14px; border-radius: 6px; background: var(--sheet); font-family: var(--ui); font-size: 14px; font-variant-numeric: tabular-nums; }
+.guesses li b { font-family: var(--display); font-weight: 400; font-size: 26px; min-width: 2.6em; }
+.guesses li .band { margin-left: auto; font-size: 18px; }
+.guesses li.hit { background: var(--mark); }
+.gdone { display: grid; gap: 14px; padding: 22px; border: 1.5px solid var(--ink); border-radius: 8px; }
+.gdone p { margin: 0; }
+.gdone .ans { font-family: var(--display); font-size: clamp(48px, 12vw, 88px); line-height: 1; }
+.gdone .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.gdone pre { margin: 0; font-family: var(--ui); font-size: 15px; white-space: pre-wrap; }
+.stats { display: flex; flex-wrap: wrap; gap: 26px; }
+.stats div { display: grid; }
+.stats b { font-family: var(--display); font-weight: 400; font-size: 34px; line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
+.stats span { font-family: var(--ui); font-size: 11.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.reveal { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.reveal li { border-top: 1px solid var(--rule); padding-top: 10px; }
+.reveal .w { font-family: var(--display); font-size: 22px; }
+.reveal p { margin: 2px 0 0; font-size: 15px; }
 </style>
 
 <div class="wrap">
   <div class="top">
     <a class="brand" href="#" id="home">Words of Your Year</a>
-    <label class="langsel"><span class="vh">Language</span><select id="lang"></select></label>
+    <div class="toplinks">
+      <a class="gamelink" href="#daily" id="gamelink">Daily game</a>
+      <label class="langsel"><span class="vh">Language</span><select id="lang"></select></label>
+    </div>
   </div>
 </div>
 
@@ -159,6 +214,7 @@ body:not(.opened) footer { display: none; }
       <button class="go" type="submit">Show my words<span aria-hidden="true">→</span></button>
     </form>
     <p class="hint" id="hint">See the words that peaked in books that year.</p>
+    <p class="playline">Or play <a href="#daily">today's guess-the-year game</a></p>
   </div>
 </section>
 
@@ -208,6 +264,23 @@ body:not(.opened) footer { display: none; }
     <p>English lists were reviewed by hand. The notes on why a word peaked were written with Claude, an AI model, and can contain mistakes. Lists for the other languages are picked automatically and have no notes.</p>
   </footer>
 </div>
+<section id="game" class="wrap" hidden aria-labelledby="gh">
+  <div class="game">
+    <button class="back" type="button" id="gback">← Words of Your Year</button>
+    <p class="eyebrow" id="gnum">Daily</p>
+    <h1 id="gh">Guess the <em>year</em></h1>
+    <p class="rules">These English words all peaked in books in the same year. Guess which year. Every miss shows one more word and tells you to go earlier or later. You have 6 guesses, and anything within 2 years counts.</p>
+    <ul class="clues" id="clues"></ul>
+    <form class="guessform" id="gform" novalidate>
+      <label for="gy" class="vh">Your guess</label>
+      <input id="gy" type="text" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="1950">
+      <button class="go" type="submit">Guess<span aria-hidden="true">→</span></button>
+    </form>
+    <p class="gmsg" id="gmsg" aria-live="polite"></p>
+    <ol class="guesses" id="guesses"></ol>
+    <div id="gdone"></div>
+  </div>
+</section>
 <div class="tip" id="tip" hidden></div>
 
 <script>
@@ -397,10 +470,27 @@ function render(asked, opts = {}) {
         </li>`).join('')}
       </ol></section>` : ''}`
     : `<p class="empty">Drag the timeline or use the arrows to find a year with words.</p>`;
-  $('body').querySelectorAll('.chart').forEach(el => mountChart(el, el.dataset.w, y, el.parentElement.classList.contains('wotd')));
+  $('body').insertAdjacentHTML('beforeend', lifeHTML(y));
+  $('body').querySelectorAll('.chart').forEach(el => mountChart(el, el.dataset.w, el.dataset.mark ? +el.dataset.mark : y, el.parentElement.classList.contains('wotd')));
   setHash();
   $('copied').textContent = '';
   $('cardwrap').hidden = true;
+}
+
+function lifeHTML(y) {
+  if (!D.life) return '';
+  const born = D.life.born[y] || [], faded = D.life.faded[y] || [];
+  if (!born.length && !faded.length) return '';
+  const part = (title, sub, rows, meta, mark, pmi) => rows.length ? `<div>
+      <h2>${title}</h2><p class="sub">${sub}</p>
+      <ul>${rows.map(r => `<li><span class="w">${esc(r[0])}<span class="m">${meta(r)}</span></span>
+        <div class="chart" data-w="${esc(r[0])}" data-pm="${r[pmi]}" data-mark="${mark(r)}"></div></li>`).join('')}</ul></div>` : '';
+  return `<section class="life">
+    ${part(`Born around ${y}`, `Words that first showed up in books around ${y} and are still used today.`, born,
+      r => `first seen ${r[1]}`, r => r[1], 3)}
+    ${part(`Faded since ${y}`, `Words that were common in ${y} and have mostly left books since.`, faded,
+      r => `now ${r[2]}% of its ${y} level`, () => y, 3)}
+  </section>`;
 }
 
 function heroWords() {
@@ -448,6 +538,7 @@ $('prev').addEventListener('click', () => { const i = years.indexOf(curYear); re
 $('next').addEventListener('click', () => { const i = years.indexOf(curYear); render(years[Math.min(years.length - 1, (i < 0 ? years.findIndex(v => v > curYear) - 1 : i) + 1)]); });
 $('home').addEventListener('click', e => {
   e.preventDefault();
+  closeGame();
   document.body.classList.remove('opened'); $('results').hidden = true; curYear = null;
   history.replaceState(null, '', location.pathname + location.search);
   scrollTo({ top: 0 }); $('y').value = ''; $('y').focus();
@@ -538,12 +629,128 @@ $('look').addEventListener('submit', async e => {
 $('result').addEventListener('click', e => { const b = e.target.closest('[data-y]'); if (b) { render(+b.dataset.y); $('results').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); } });
 
 /* ---------- start ---------- */
+/* ---------- daily game ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+function dayNumber(dt = new Date()) {
+  return Math.floor((Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate()) - Date.UTC(2026, 9, 27)) / 864e5) + 1;
+}
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+let G = null;
+async function openGame() {
+  document.body.classList.add('gaming');
+  $('game').hidden = false;
+  scrollTo({ top: 0 });
+  if (location.hash !== '#daily') history.replaceState(null, '', '#daily');
+  let E;
+  try { E = await loadLang('en'); } catch (e) { $('gmsg').textContent = e.message; return; }
+  const pool = Object.keys(E.years).map(Number).filter(y => y >= 1840 && y <= 2011 && E.years[y].length >= 4).sort((a, b) => a - b);
+  const r = rng(20261027);
+  for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+  const n = Math.max(1, dayNumber()), year = pool[(n - 1) % pool.length];
+  const list = E.years[year], head = headline(list);
+  // rarest words first, the giveaway word last
+  const clues = [...list.filter(x => x !== head).sort((a, b) => a[1] - b[1]), head];
+  const saved = store.get('wy-daily', null);
+  G = { n, year, clues, guesses: saved && saved.n === n ? saved.guesses : [], done: saved && saved.n === n ? saved.done : false };
+  $('gnum').textContent = `Daily #${n}`;
+  drawGame();
+}
+function closeGame() {
+  document.body.classList.remove('gaming');
+  $('game').hidden = true;
+  if (location.hash === '#daily') history.replaceState(null, '', location.pathname + location.search);
+  if (curYear) setHash();
+}
+const MAXG = 6;
+function band(diff) { const a = Math.abs(diff); return a <= 2 ? '🟩' : a <= 5 ? '🟨' : a <= 15 ? '🟧' : '⬜'; }
+function drawGame() {
+  const shown = Math.min(G.clues.length, 2 + G.guesses.filter(g => Math.abs(g - G.year) > 2).length);
+  const total = G.done ? G.clues.length : shown;
+  const left = G.clues.length - total;
+  $('clues').innerHTML = G.clues.slice(0, total).map((c, i) =>
+    `<li class="clue${i === total - 1 && i >= 2 && !G.done ? ' new' : ''}"><span class="w">${esc(c[0])}</span></li>`).join('')
+    + (left > 0 ? `<li class="clue locked">${left} more ${left === 1 ? 'word unlocks' : 'words unlock'} as you guess</li>` : '');
+  $('guesses').innerHTML = G.guesses.map(g => {
+    const d = G.year - g, hit = Math.abs(d) <= 2;
+    return `<li class="${hit ? 'hit' : ''}"><b>${g}</b><span>${hit ? (d === 0 ? 'Exactly right' : `Within ${Math.abs(d)} ${Math.abs(d) === 1 ? 'year' : 'years'}`) : (d > 0 ? 'Later ⬆' : 'Earlier ⬇')}</span><span class="band">${band(d)}</span></li>`;
+  }).join('');
+  $('gform').hidden = G.done;
+  $('gdone').innerHTML = G.done ? doneHTML() : '';
+  if (G.done) { tickNext(); }
+}
+function shareText() {
+  const won = G.guesses.some(g => Math.abs(g - G.year) <= 2);
+  const line = G.guesses.map(g => { const d = G.year - g; return Math.abs(d) <= 2 ? '🟩' : band(d) + (d > 0 ? '⬆' : '⬇'); }).join(' ');
+  return `Words of Your Year · Daily #${G.n} · ${won ? G.guesses.length : 'X'}/${MAXG}\n${line}${SITE ? '\n' + SITE + '#daily' : ''}`;
+}
+function doneHTML() {
+  const won = G.guesses.some(g => Math.abs(g - G.year) <= 2);
+  const st = store.get('wy-stats', { played: 0, won: 0, streak: 0, best: 0 });
+  return `<div class="gdone">
+    <p class="eyebrow">${won ? `Solved in ${G.guesses.length}` : 'Out of guesses'}</p>
+    <p class="ans">${G.year}</p>
+    <div class="row"><button class="pill" type="button" id="gshare">Copy result</button><button class="pill" type="button" id="gsee">See all words of ${G.year}</button><output id="gcopied"></output></div>
+    <pre>${esc(shareText())}</pre>
+    <div class="stats"><div><b>${st.played}</b><span>Played</span></div><div><b>${st.played ? Math.round(100 * st.won / st.played) : 0}%</b><span>Won</span></div><div><b>${st.streak}</b><span>Streak</span></div><div><b>${st.best}</b><span>Best</span></div></div>
+    <p class="small" id="gnext"></p>
+    <ul class="reveal">${G.clues.map(c => `<li><span class="w">${esc(c[0])}</span>${c[4] ? `<p>${esc(c[4])}</p>` : ''}</li>`).join('')}</ul>
+  </div>`;
+}
+let nextTimer = 0;
+function tickNext() {
+  clearInterval(nextTimer);
+  const t = () => {
+    const now = new Date(), mid = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const s = Math.max(0, Math.floor((mid - now) / 1000));
+    const el = $('gnext'); if (!el) return clearInterval(nextTimer);
+    el.textContent = `Next puzzle in ${String(Math.floor(s / 3600)).padStart(2, '0')}:${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+  };
+  t(); nextTimer = setInterval(t, 1000);
+}
+$('gform').addEventListener('submit', e => {
+  e.preventDefault();
+  if (!G || G.done) return;
+  const v = parseInt($('gy').value, 10);
+  if (!(v >= 1800 && v <= 2019)) { $('gmsg').textContent = 'Type a year between 1800 and 2019.'; return; }
+  if (G.guesses.includes(v)) { $('gmsg').textContent = `You already tried ${v}.`; return; }
+  $('gmsg').textContent = '';
+  G.guesses.push(v);
+  const won = Math.abs(v - G.year) <= 2;
+  if (won || G.guesses.length >= MAXG) {
+    G.done = true;
+    const st = store.get('wy-stats', { played: 0, won: 0, streak: 0, best: 0, last: 0 });
+    if (st.last !== G.n) {
+      st.played++; if (won) { st.won++; st.streak = st.last === G.n - 1 || !st.last ? st.streak + 1 : 1; st.best = Math.max(st.best, st.streak); } else st.streak = 0;
+      st.last = G.n; store.set('wy-stats', st);
+    }
+  }
+  store.set('wy-daily', { n: G.n, guesses: G.guesses, done: G.done });
+  $('gy').value = '';
+  drawGame();
+  if (!G.done) $('gy').focus();
+});
+$('gdone').addEventListener('click', e => {
+  if (e.target.id === 'gshare') {
+    const text = shareText(), out = $('gcopied');
+    navigator.clipboard.writeText(text).then(() => { out.textContent = 'Copied. Paste it anywhere.'; }).catch(() => { out.textContent = 'Select the text below and copy it.'; });
+  }
+  if (e.target.id === 'gsee') { const y = G.year; closeGame(); setLang('en', y); }
+});
+$('gback').addEventListener('click', closeGame);
+$('gamelink').addEventListener('click', e => { e.preventDefault(); openGame(); });
+document.querySelector('.playline a').addEventListener('click', e => { e.preventDefault(); openGame(); });
+
 function fromHash() {
+  if (location.hash === '#daily') { if (!D) setLang('en', null); openGame(); return; }
+  closeGame();
   const m = location.hash.slice(1).match(/^(?:([a-z]{2})-)?(\d{4})$/);
   const l = m && m[1] && LANGS.some(x => x.code === m[1]) ? m[1] : (m ? 'en' : lang);
   setLang(l, m ? +m[2] : null);
 }
-addEventListener('hashchange', () => { const h = location.hash.slice(1); if (h && h !== (lang === 'en' ? String(curYear) : `${lang}-${curYear}`)) fromHash(); });
+addEventListener('hashchange', () => { const h = location.hash.slice(1); if (h === 'daily' || (h && h !== (lang === 'en' ? String(curYear) : `${lang}-${curYear}`))) fromHash(); });
 fromHash();
 </script>
 
