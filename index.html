@@ -15,30 +15,21 @@
 <style>
 /* Layout: a one-question hero, then a sticky year timeline, the word of the year, the other words, lookup, footer. */
 :root {
-  --paper: #f2f4f6;
-  --sheet: #fbfcfd;
-  --ink: #18222f;
-  --muted: #5d6877;
-  --ghost: #18222f10;
-  --rule: #d5dbe2;
-  --line: #2f5d8a;
-  --mark: #f0c93a;
-  --mark-ink: #18222f;
+  --paper: #ffffff;
+  --sheet: #f7f7f5;
+  --ink: #111111;
+  --muted: #6e6e6e;
+  --ghost: #1111110c;
+  --rule: #e4e4e1;
+  --line: #111111;
+  --mark: #f5c518;
+  --mark-ink: #111111;
   --display: "Young Serif", Georgia, "Times New Roman", serif;
   --body: "Source Serif 4", Georgia, "Times New Roman", serif;
   --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   --gutter: max(16px, env(safe-area-inset-left, 0px));
   --gutter-r: max(16px, env(safe-area-inset-right, 0px));
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #10161f; --sheet: #161e29; --ink: #e5e9ef; --muted: #96a1b0; --ghost: #e5e9ef12;
-    --rule: #2a3442; --line: #7fb0dd; --mark: #d9b235; --mark-ink: #10161f; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #10161f; --sheet: #161e29; --ink: #e5e9ef; --muted: #96a1b0; --ghost: #e5e9ef12;
-  --rule: #2a3442; --line: #7fb0dd; --mark: #d9b235; --mark-ink: #10161f; color-scheme: dark;
+  color-scheme: light;
 }
 * { box-sizing: border-box; }
 body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.5; }
@@ -46,7 +37,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .wrap { max-width: 1040px; margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter-r); }
 .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 button, select, input { font: inherit; color: inherit; }
-:focus-visible { outline: 2px solid var(--line); outline-offset: 3px; }
+:focus-visible { outline: 2px solid #b8900a; outline-offset: 3px; }
 
 /* top bar */
 .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 18px 0; position: relative; z-index: 2; }
@@ -70,7 +61,7 @@ body.opened .ask input { font-size: clamp(44px, 9vw, 72px); }
 .ask input::placeholder { color: var(--rule); }
 .ask input:focus-visible { outline: none; border-bottom-color: var(--line); }
 .go { font-family: var(--mono); font-size: 15px; padding: 14px 22px; border: 0; border-radius: 999px; background: var(--ink); color: var(--paper); cursor: pointer; margin-bottom: 10px; }
-.go:hover { background: var(--line); }
+.go:hover { background: #333333; }
 .hint { margin: 0; font-size: 15px; color: var(--muted); min-height: 1.5em; }
 
 /* results */
@@ -127,7 +118,7 @@ svg.spark { display: block; width: 100%; height: 46px; margin-top: 10px; overflo
 .found { display: grid; gap: 6px; }
 .found p { margin: 0; }
 .found svg.spark { height: 150px; }
-.linkish { background: none; border: none; padding: 0; color: var(--line); text-decoration: underline; cursor: pointer; }
+.linkish { background: none; border: none; padding: 0; color: var(--ink); text-decoration: underline; text-decoration-color: var(--mark); text-decoration-thickness: 3px; text-underline-offset: 3px; cursor: pointer; }
 footer { margin-top: 64px; padding-block: 28px 56px; border-top: 1px solid var(--rule); font-size: 14px; color: var(--muted); display: grid; gap: 8px; max-width: 72ch; }
 footer p { margin: 0; }
 
@@ -245,8 +236,8 @@ function chartSVG(series, mark, word, big) {
   const ticks = big ? [1800, 1850, 1900, 1950, 2000].map(t => `<text class="axis" x="${x(t - Y0)}" y="${H + 14}" text-anchor="${t === 1800 ? 'start' : 'middle'}">${t}</text>`).join('') : '';
   return `<svg class="spark" viewBox="0 0 ${W} ${H + (big ? 18 : 4)}" preserveAspectRatio="none" role="img" aria-label="Use of ${esc(word)} from 1800 to 2019, peaking in ${mark}">
     <line x1="0" y1="${H}" x2="${W}" y2="${H}" stroke="var(--rule)" stroke-width="1" vector-effect="non-scaling-stroke"/>
-    <rect x="${(px - 2.5).toFixed(1)}" y="0" width="5" height="${H}" fill="var(--mark)" opacity=".6"/>
-    <path d="${d} L${W} ${H} L0 ${H} Z" fill="var(--line)" opacity=".12"/>
+    <rect x="${(px - 2.5).toFixed(1)}" y="0" width="5" height="${H}" fill="var(--mark)" opacity=".85"/>
+    <path d="${d} L${W} ${H} L0 ${H} Z" fill="var(--line)" opacity=".06"/>
     <path d="${d}" fill="none" stroke="var(--line)" stroke-width="${big ? 2 : 1.6}" vector-effect="non-scaling-stroke"/>
     <line class="guide" x1="0" x2="0" y1="0" y2="${H}" stroke="var(--ink)" stroke-width="1" vector-effect="non-scaling-stroke" opacity="0"/>
     ${ticks}
