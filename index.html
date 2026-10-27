@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Words of Your Year</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Type a year and see the words whose use in books peaked that year. Google Books data, 1800 to 2019, in eight languages.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one column. Controls, then a year stamp, then dictionary-style entries. */
+:root {
+  --paper: #f2f4f6;
+  --sheet: #fbfcfd;
+  --ink: #18222f;
+  --muted: #5d6877;
+  --rule: #d5dbe2;
+  --line: #2f5d8a;
+  --mark: #f0c93a;
+  --mark-ink: #18222f;
+  --display: "Young Serif", Georgia, "Times New Roman", serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #10161f; --sheet: #161e29; --ink: #e5e9ef; --muted: #96a1b0;
+    --rule: #2a3442; --line: #7fb0dd; --mark: #d9b235; --mark-ink: #10161f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10161f; --sheet: #161e29; --ink: #e5e9ef; --muted: #96a1b0;
+  --rule: #2a3442; --line: #7fb0dd; --mark: #d9b235; --mark-ink: #10161f; color-scheme: dark;
+}
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.5; }
+.wrap { max-width: 980px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 64px; }
+header { display: grid; gap: 18px; }
+.kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(30px, 5vw, 44px); line-height: 1.1; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--display); font-weight: 400; font-size: 24px; margin: 0; }
+.lede { margin: 0; max-width: 60ch; color: var(--muted); }
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.bar label { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+input, select { font-family: var(--mono); font-size: 16px; padding: 8px 10px; border: 1px solid var(--rule); border-radius: 6px; background: var(--sheet); color: var(--ink); }
+#y { width: 5.5em; font-size: 18px; }
+#q { width: min(100%, 16em); }
+button { font-family: var(--mono); font-size: 13px; padding: 9px 12px; border: 1px solid var(--rule); border-radius: 6px; background: var(--sheet); color: var(--ink); cursor: pointer; }
+button:hover { border-color: var(--line); }
+:focus-visible { outline: 2px solid var(--line); outline-offset: 2px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tabs button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.stamp { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; margin-top: 34px; padding-bottom: 14px; border-bottom: 2px solid var(--ink); }
+.year { font-family: var(--display); font-size: clamp(72px, 16vw, 148px); line-height: .9; letter-spacing: -.02em; }
+.stamp p { margin: 0; color: var(--muted); max-width: 36ch; }
+.headline { margin: 22px 0 6px; font-size: 19px; }
+.headline b { font-family: var(--display); font-weight: 400; background: var(--mark); color: var(--mark-ink); padding: 0 .25em; }
+.auto { font-family: var(--mono); font-size: 12px; color: var(--muted); margin: 10px 0 0; }
+.entries { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); column-gap: 40px; }
+.entry { display: grid; grid-template-columns: 2.4ch 1fr; gap: 0 10px; padding: 14px 0; border-bottom: 1px solid var(--rule); min-width: 0; }
+.num { font-family: var(--mono); font-size: 12px; color: var(--muted); padding-top: 9px; font-variant-numeric: tabular-nums; }
+.head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; min-width: 0; }
+.word { font-family: var(--display); font-size: 25px; line-height: 1.2; overflow-wrap: anywhere; }
+.stat { font-family: var(--mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.note { grid-column: 2; margin: 4px 0 0; font-size: 15.5px; max-width: 60ch; }
+.chart { grid-column: 2; position: relative; }
+svg.spark { display: block; width: 100%; height: 52px; margin-top: 6px; overflow: visible; touch-action: pan-y; cursor: crosshair; }
+svg.big { height: 160px; }
+.axis { font-family: var(--mono); font-size: 10px; fill: var(--muted); }
+.tip { position: fixed; z-index: 20; pointer-events: none; font-family: var(--mono); font-size: 12px; background: var(--ink); color: var(--paper); padding: 4px 8px; border-radius: 4px; white-space: nowrap; transform: translate(-50%, -130%); }
+.empty { padding: 30px 0; color: var(--muted); }
+.panel { margin-top: 34px; padding: 18px; background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; display: grid; gap: 12px; }
+.panel .found { display: grid; gap: 6px; }
+.panel .found p { margin: 0; }
+.panel .found .chart { grid-column: auto; }
+.linkish { background: none; border: none; padding: 0; color: var(--line); text-decoration: underline; font: inherit; cursor: pointer; }
+.share { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.share output { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+#card { max-width: min(100%, 360px); border: 1px solid var(--rule); border-radius: 6px; }
+.small { font-size: 14px; color: var(--muted); margin: 0; }
+footer { margin-top: 48px; font-size: 14px; color: var(--muted); max-width: 70ch; display: grid; gap: 8px; }
+footer p { margin: 0; }
+@media (prefers-reduced-motion: no-preference) { .entry { animation: in .25s ease both; } @keyframes in { from { opacity: .4; } to { opacity: 1; } } }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="kicker" id="kick">Google Books · 1800 to 2019</p>
+    <h1>Words of Your Year</h1>
+    <p class="lede">Every year has words that were everywhere in print and then faded. Type a year, for example the year you were born, to see the words whose use in books peaked in that year.</p>
+    <div class="tabs" id="langs" role="group" aria-label="Language"></div>
+    <form class="bar" id="pick">
+      <label for="y">Year</label>
+      <input id="y" type="number" inputmode="numeric" min="1800" max="2019" value="1970">
+      <button type="submit">Show</button>
+      <button type="button" id="prev" aria-label="Previous year">◀ Prev</button>
+      <button type="button" id="next" aria-label="Next year">Next ▶</button>
+      <button type="button" id="rand">Random year</button>
+    </form>
+  </header>
+
+  <section id="view" aria-live="polite"><p class="empty">Loading…</p></section>
+
+  <div class="share">
+    <button type="button" id="copy">Copy my year</button>
+    <button type="button" id="img">Make share image</button>
+    <output id="copied"></output>
+  </div>
+  <div id="cardwrap" hidden>
+    <img id="card" alt="Share image for this year">
+    <p class="small"><button type="button" id="save">Save image</button> <output id="saved"></output></p>
+  </div>
+
+  <section class="panel" aria-labelledby="lookh">
+    <h2 id="lookh">Look up a word</h2>
+    <form class="bar" id="look">
+      <label for="q">Word</label>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="e.g. telegraph">
+      <button type="submit">Find its year</button>
+    </form>
+    <div id="result" aria-live="polite"></div>
+  </section>
+
+  <footer>
+    <p>Source: Google Books Ngram data (2019 version). Each line shows how often the word appeared per million words in books of that language, smoothed over five years, 1800 to 2019. A word is listed under the year its use peaked, if it rose clearly above earlier levels and has since fallen. Names and places are left out where the language capitalises them.</p>
+    <p>English lists were reviewed by hand. The notes on why a word peaked were written with Claude, an AI model, and can contain mistakes. Lists for the other languages are picked automatically and have no notes.</p>
+  </footer>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+const LANGS = [{"code": "en", "name": "English", "adj": "English"}, {"code": "fr", "name": "Français", "adj": "French"}, {"code": "de", "name": "Deutsch", "adj": "German"}, {"code": "es", "name": "Español", "adj": "Spanish"}, {"code": "it", "name": "Italiano", "adj": "Italian"}, {"code": "ru", "name": "Русский", "adj": "Russian"}, {"code": "he", "name": "עברית", "adj": "Hebrew"}, {"code": "zh", "name": "中文", "adj": "Chinese"}];
+const SITE = "";
+const Y0 = 1800, Y1 = 2019, NY = Y1 - Y0 + 1;
+const $ = id => document.getElementById(id);
+const yIn = $('y'), view = $('view'), tip = $('tip');
+const cache = {}, searchCache = {};
+let lang = 'en', D = null, years = [], curYear = 1970;
+
+function b64(s) { const t = atob(s), a = new Uint8Array(t.length); for (let i = 0; i < t.length; i++) a[i] = t.charCodeAt(i); return a; }
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function fmt(x) { return x >= 10 ? x.toFixed(0) : x >= 1 ? x.toFixed(1) : x >= 0.1 ? x.toFixed(2) : x.toFixed(3); }
+
+async function loadLang(l) {
+  if (!cache[l]) {
+    const r = await fetch(`data/${l}.json`);
+    if (!r.ok) throw new Error('Could not load the word lists. Reload the page to try again.');
+    cache[l] = await r.json();
+  }
+  return cache[l];
+}
+
+// chart: series is 0..255 scaled to the word's own peak, pm = per million at peak
+function chartSVG(series, mark, pm, word, big) {
+  const W = 400, H = big ? 130 : 44, n = series.length;
+  const x = i => (i / (n - 1)) * W, y = v => H - (v / 255) * (H - 4);
+  let d = '';
+  for (let i = 0; i < n; i++) d += (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(series[i]).toFixed(1);
+  const px = x(mark - Y0);
+  const ticks = big ? [1800, 1850, 1900, 1950, 2000].map(t => `<text class="axis" x="${x(t - Y0)}" y="${H + 14}" text-anchor="${t === 1800 ? 'start' : 'middle'}">${t}</text>`).join('') : '';
+  return `<svg class="spark${big ? ' big' : ''}" viewBox="0 0 ${W} ${H + (big ? 18 : 6)}" preserveAspectRatio="none" role="img" aria-label="Use of ${esc(word)} from 1800 to 2019, peaking in ${mark}">
+    <line x1="0" y1="${H}" x2="${W}" y2="${H}" stroke="var(--rule)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+    <rect x="${(px - 3).toFixed(1)}" y="0" width="6" height="${H}" fill="var(--mark)" opacity=".55"/>
+    <path d="${d} L${W} ${H} L0 ${H} Z" fill="var(--line)" opacity=".12"/>
+    <path d="${d}" fill="none" stroke="var(--line)" stroke-width="1.6" vector-effect="non-scaling-stroke"/>
+    <line class="guide" x1="0" x2="0" y1="0" y2="${H}" stroke="var(--ink)" stroke-width="1" vector-effect="non-scaling-stroke" opacity="0"/>
+    ${ticks}
+  </svg>`;
+}
+// hover / touch readout for any chart
+const chartData = new WeakMap();
+function wire(svg, series, pm) {
+  chartData.set(svg, { series, pm });
+  const guide = svg.querySelector('.guide');
+  const move = e => {
+    const r = svg.getBoundingClientRect();
+    const f = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+    const i = Math.round(f * (series.length - 1));
+    const gx = (i / (series.length - 1)) * 400;
+    guide.setAttribute('x1', gx); guide.setAttribute('x2', gx); guide.setAttribute('opacity', '.5');
+    tip.textContent = `${Y0 + i} · ${fmt(series[i] / 255 * pm)} per million`;
+    tip.style.left = e.clientX + 'px'; tip.style.top = r.top + 'px'; tip.hidden = false;
+  };
+  const out = () => { tip.hidden = true; guide.setAttribute('opacity', '0'); };
+  svg.addEventListener('pointermove', move);
+  svg.addEventListener('pointerdown', move);
+  svg.addEventListener('pointerleave', out);
+  svg.addEventListener('pointercancel', out);
+}
+
+function nearest(y) {
+  if (D.years[y]) return y;
+  let best = years[0];
+  for (const v of years) if (Math.abs(v - y) < Math.abs(best - y)) best = v;
+  return best;
+}
+function headlineWord(list) {
+  if (!list.length) return '';
+  return list.slice(0, 10).reduce((a, r) => (!a || r[2] > a[2] ? r : a), null)[0];
+}
+function setHash() {
+  const h = lang === 'en' ? String(curYear) : `${lang}-${curYear}`;
+  if (location.hash.slice(1) !== h) history.replaceState(null, '', '#' + h);
+}
+function render(y) {
+  curYear = y = nearest(y);
+  yIn.value = y;
+  const list = D.years[y] || [];
+  const top = headlineWord(list);
+  const L = LANGS.find(l => l.code === lang);
+  view.innerHTML = `
+    <div class="stamp"><span class="year">${y}</span><p>${list.length} ${list.length === 1 ? 'word' : 'words'} whose use in ${L.adj} books peaked in ${y}, most frequent first.</p></div>
+    ${top ? `<p class="headline">The word of ${y}: <b dir="auto">${esc(top)}</b></p>` : ''}
+    ${D.curated ? '' : '<p class="auto">Picked automatically, not reviewed by hand.</p>'}
+    <ol class="entries">${list.map(([w, pm, rise, now, note], i) => `
+      <li class="entry">
+        <span class="num">${String(i + 1).padStart(2, '0')}</span>
+        <div class="head"><span class="word" dir="auto">${esc(w)}</span>
+          <span class="stat">${fmt(pm)} per million at peak · ${rise}× earlier level · now ${now}% of peak</span></div>
+        ${note ? `<p class="note">${esc(note)}</p>` : ''}
+        <div class="chart" data-w="${esc(w)}" data-pm="${pm}"></div>
+      </li>`).join('')}
+    </ol>
+    ${list.length ? '' : '<p class="empty">No clear peak words for this year.</p>'}`;
+  view.querySelectorAll('.chart').forEach(el => {
+    const w = el.dataset.w, s = b64(D.series[w]), pm = +el.dataset.pm;
+    el.innerHTML = chartSVG(s, y, pm, w, false);
+    wire(el.firstElementChild, s, pm);
+  });
+  setHash();
+  $('copied').textContent = '';
+  $('cardwrap').hidden = true;
+}
+
+async function setLang(l, y) {
+  lang = l;
+  document.querySelectorAll('#langs button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.l === l)));
+  view.innerHTML = '<p class="empty">Loading…</p>';
+  try { D = await loadLang(l); }
+  catch (e) { view.innerHTML = `<p class="empty">${esc(e.message)}</p>`; return; }
+  years = Object.keys(D.years).map(Number).sort((a, b) => a - b);
+  yIn.min = years[0]; yIn.max = years[years.length - 1];
+  const L = LANGS.find(x => x.code === l);
+  $('kick').textContent = `Google Books · ${years[0]} to ${years[years.length - 1]} · ${L.name}`;
+  $('result').innerHTML = '';
+  render(y ?? curYear);
+}
+
+$('langs').innerHTML = LANGS.map(l => `<button type="button" data-l="${l.code}" aria-pressed="false" lang="${l.code}">${l.name}</button>`).join('');
+$('langs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setLang(b.dataset.l); });
+$('pick').addEventListener('submit', e => { e.preventDefault(); render(+yIn.value || 1970); });
+$('prev').addEventListener('click', () => { const i = years.indexOf(curYear); render(years[Math.max(0, i - 1)]); });
+$('next').addEventListener('click', () => { const i = years.indexOf(curYear); render(years[Math.min(years.length - 1, i + 1)]); });
+$('rand').addEventListener('click', () => render(years[Math.floor(Math.random() * years.length)]));
+
+$('copy').addEventListener('click', () => {
+  const list = (D.years[curYear] || []).slice(0, 5).map(r => r[0]);
+  const text = `My year is ${curYear}. Its words: ${list.join(', ')}.`;
+  const out = $('copied');
+  navigator.clipboard.writeText(text).then(() => { out.textContent = 'Copied: ' + text; })
+    .catch(() => { out.textContent = text; const r = document.createRange(); r.selectNodeContents(out); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
+});
+
+// share image: 1080 x 1350, drawn with the page's own colours and fonts
+$('img').addEventListener('click', async () => {
+  try { await document.fonts.ready; } catch (e) {}
+  const cs = getComputedStyle(document.documentElement), v = n => cs.getPropertyValue(n).trim();
+  const c = document.createElement('canvas'); c.width = 1080; c.height = 1350;
+  const g = c.getContext('2d');
+  g.fillStyle = v('--paper'); g.fillRect(0, 0, 1080, 1350);
+  g.fillStyle = v('--muted'); g.font = '600 30px "JetBrains Mono", monospace';
+  g.fillText('WORDS OF MY YEAR', 90, 140);
+  g.fillStyle = v('--ink'); g.font = '300px "Young Serif", Georgia, serif';
+  g.fillText(String(curYear), 80, 430);
+  g.fillRect(90, 480, 900, 5);
+  const list = (D.years[curYear] || []).slice(0, 5);
+  list.forEach(([w], i) => {
+    const y = 600 + i * 140;
+    g.fillStyle = v('--muted'); g.font = '30px "JetBrains Mono", monospace';
+    g.fillText(String(i + 1).padStart(2, '0'), 90, y);
+    g.fillStyle = v('--ink');
+    let size = 84;
+    do { g.font = `${size}px "Young Serif", Georgia, serif`; size -= 4; } while (g.measureText(w).width > 820 && size > 30);
+    g.fillText(w, 170, y);
+  });
+  g.fillStyle = v('--muted'); g.font = '28px "JetBrains Mono", monospace';
+  g.fillText(SITE || 'Peak words in books · Google Books Ngram data', 90, 1270);
+  const url = c.toDataURL('image/png');
+  $('card').src = url; cardCanvas = c; $('saved').textContent = '';
+  $('cardwrap').hidden = false;
+});
+// saving: inside Claude the viewer confirms through the downloads capability; elsewhere a normal download link
+let cardCanvas = null, dl;
+const dlReady = window.claude?.use ? window.claude.use('downloads').then(x => (dl = x)).catch(() => (dl = null)) : Promise.resolve(dl = null);
+$('save').addEventListener('click', () => {
+  if (!cardCanvas) return;
+  const name = `words-of-${curYear}.png`, out = $('saved');
+  cardCanvas.toBlob(async blob => {
+    await dlReady;
+    if (dl) {
+      try { await dl.save({ filename: name, data: blob }); out.textContent = 'Saved.'; }
+      catch (e) { out.textContent = e && e.code === 'declined' ? '' : 'Saving is not available here. Long-press or right-click the image instead.'; }
+    } else if (window.claude?.use) {
+      out.textContent = 'Saving is not available here. Long-press or right-click the image instead.';
+    } else {
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    }
+  }, 'image/png');
+});
+
+// word lookup: index files are loaded the first time someone searches
+async function loadSearch(l) {
+  if (!searchCache[l]) {
+    const m = await fetch(`search/${l}.json`);
+    if (!m.ok) throw new Error('Could not load the word index. Try again.');
+    const meta = await m.json(), buf = b64(meta.series);
+    const idx = new Map(meta.words.map((w, i) => [w, i]));
+    searchCache[l] = { meta, buf, idx };
+  }
+  return searchCache[l];
+}
+$('look').addEventListener('submit', async e => {
+  e.preventDefault();
+  const q = $('q').value.trim().toLowerCase();
+  const out = $('result');
+  if (!q) { out.innerHTML = ''; return; }
+  out.innerHTML = '<p class="small">Searching…</p>';
+  let S;
+  try { S = await loadSearch(lang); } catch (err) { out.innerHTML = `<p class="small">${esc(err.message)}</p>`; return; }
+  const i = S.idx.get(q);
+  if (i === undefined) { out.innerHTML = `<p class="small">“${esc(q)}” is not among the ${S.meta.words.length.toLocaleString('en')} most common words in this language’s books. Check the spelling, or try the singular form.</p>`; return; }
+  const series = S.buf.subarray(i * NY, (i + 1) * NY), pm = S.meta.pm[i], peak = S.meta.peak[i];
+  const listed = (D.years[peak] || []).some(r => r[0] === q);
+  out.innerHTML = `<div class="found">
+      <p><span class="word" dir="auto">${esc(q)}</span> <span class="stat">peaked in ${peak} at ${fmt(pm)} per million words · now ${S.meta.now[i]}% of peak</span></p>
+      <div class="chart"></div>
+      <p class="small">${listed ? `It is one of the words of <button type="button" class="linkish" data-y="${peak}">${peak}</button>.` : `See the words of <button type="button" class="linkish" data-y="${peak}">${peak}</button>.`} Move along the line to read any year.</p>
+    </div>`;
+  const ch = out.querySelector('.chart');
+  ch.innerHTML = chartSVG(series, peak, pm, q, true);
+  wire(ch.firstElementChild, series, pm);
+});
+$('result').addEventListener('click', e => { const b = e.target.closest('[data-y]'); if (b) { render(+b.dataset.y); window.scrollTo({ top: 0, behavior: 'smooth' }); } });
+
+function fromHash() {
+  const h = location.hash.slice(1);
+  const m = h.match(/^(?:([a-z]{2})-)?(\d{4})$/);
+  const l = m && m[1] && LANGS.some(x => x.code === m[1]) ? m[1] : 'en';
+  const y = m ? +m[2] : 1970;
+  setLang(l, y >= Y0 && y <= Y1 ? y : 1970);
+}
+window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (h !== (lang === 'en' ? String(curYear) : `${lang}-${curYear}`)) fromHash(); });
+fromHash();
+</script>
+
+</body>
+</html>
