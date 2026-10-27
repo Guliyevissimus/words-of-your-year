@@ -177,7 +177,7 @@ body:not(.opened) footer { display: none; }
   </div>
 
   <div class="wrap">
-    <div class="stamp"><span class="year" id="yearNum">1970</span><p class="meta" id="meta"></p></div>
+    <div class="stamp"><span class="year" id="yearNum"></span><p class="meta" id="meta"></p></div>
     <p class="notice" id="notice" hidden></p>
     <div id="body"></div>
 
@@ -343,7 +343,8 @@ let tween = 0;
 function countTo(to, animate) {
   const el = $('yearNum'), from = parseInt(el.textContent, 10);
   cancelAnimationFrame(tween);
-  if (!animate || reduce || isNaN(from) || from === to) { el.textContent = to; return; }
+  if (!animate || reduce || document.hidden || isNaN(from) || from === to) { el.textContent = to; return; }
+  setTimeout(() => { if (curYear === to) el.textContent = to; }, 600);
   const t0 = performance.now(), dur = 420;
   const step = t => {
     const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
